@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key-Baumer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e8f4fd 0%, #f0f4f8 50%, #e2e8f0 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.08),
+                        0 8px 24px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%);
+            padding: 36px 32px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .header-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-icon svg {
+            width: 28px;
+            height: 28px;
+            fill: #ffffff;
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 14px;
+            margin-top: 6px;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            background: #f8fafc;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+            background: #f0f9ff;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: #ffffff;
+        }
+
+        /* Content */
+        .content {
+            padding: 32px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1e293b;
+            font-family: 'Inter', monospace;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-wrapper input::placeholder {
+            color: #94a3b8;
+            letter-spacing: 1px;
+        }
+
+        .btn-calcular {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-calcular:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-calcular:active {
+            transform: translateY(0);
+        }
+
+        .resultado {
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 16px;
+            border: 1px solid #bae6fd;
+            text-align: center;
+            display: none;
+        }
+
+        .resultado.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .resultado-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .resultado-senha {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e40af;
+            letter-spacing: 4px;
+            font-family: 'Inter', monospace;
+        }
+
+        .resultado-info {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .error-msg {
+            color: #ef4444;
+            text-align: center;
+            margin-top: 12px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .error-msg.show {
+            display: block;
+        }
+
+        /* Histórico */
+        .historico {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .historico-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .historico-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .historico-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .historico-item:hover {
+            background: #f1f5f9;
+        }
+
+        .historico-code {
+            font-size: 12px;
+            color: #475569;
+            font-weight: 500;
+            font-family: monospace;
+        }
+
+        .historico-senha {
+            font-size: 14px;
+            color: #1e40af;
+            font-weight: 600;
+            font-family: 'Inter', monospace;
+            letter-spacing: 1px;
+        }
+
+        .btn-limpar {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 8px;
+        }
+
+        .btn-limpar:hover {
+            color: #ef4444;
+            border-color: #fecaca;
+            background: #fef2f2;
+        }
+
+        .footer {
+            padding: 16px 32px;
+            text-align: center;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .footer p {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        /* Scrollbar */
+        .historico-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .historico-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .historico-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 28px 24px;
+            }
+
+            .content {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .resultado-senha {
+                font-size: 28px;
+            }
+
+            .tab {
+                font-size: 13px;
+                padding: 14px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/>
+                </svg>
+            </div>
+            <h1>Key-Baumer</h1>
+            <p>Gerador de senhas de acesso</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('triaxx')">Senha Triaxx</div>
+            <div class="tab" onclick="switchTab('periodica')">Senha Periódica</div>
+        </div>
+
+        <div class="content">
+            <!-- Tab Triaxx -->
+            <div class="tab-content active" id="tab-triaxx">
+                <div class="input-group">
+                    <label for="hex-input">Código HEX (10 bytes)</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="hex-input" 
+                            placeholder="00-XX-18-XX-23-XX-XX-XX-XX-XX" 
+                            maxlength="29"
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
+
+                <button class="btn-calcular" onclick="calcularTriaxx()">Gerar Senha</button>
+
+                <p class="error-msg" id="error-triaxx"></p>
+
+                <div class="resultado" id="resultado-triaxx">
+                    <div class="resultado-label">Senha Triaxx</div>
+                    <div class="resultado-senha" id="senha-triaxx"></div>
+                    <div class="resultado-info" id="info-triaxx"></div>
+                </div>
+
+                <div class="historico" id="historico-triaxx-section" style="display:none;">
+                    <div class="historico-title">Histórico</div>
+                    <div class="historico-list" id="historico-triaxx-list"></div>
+                    <button class="btn-limpar" onclick="limparHistorico('triaxx')">Limpar histórico</button>
+                </div>
+            </div>
+
+            <!-- Tab Periódica -->
+            <div class="tab-content" id="tab-periodica">
+                <div class="input-group">
+                    <label for="ns-input">Número de Série</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="ns-input" 
+                            placeholder="Digite os 5 dígitos" 
+                            maxlength="5"
+                            inputmode="numeric"
+                            autocomplete="off"
+                        >
+                    </div>
+                </div>
+
+                <button class="btn-calcular" onclick="calcularPeriodica()">Gerar Senha</button>
+
+                <p class="error-msg" id="error-periodica"></p>
+
+                <div class="resultado" id="resultado-periodica">
+                    <div class="resultado-label">Senha Periódica</div>
+                    <div class="resultado-senha" id="senha-periodica"></div>
+                    <div class="resultado-info" id="info-periodica"></div>
+                </div>
+
+                <div class="historico" id="historico-periodica-section" style="display:none;">
+                    <div class="historico-title">Histórico</div>
+                    <div class="historico-list" id="historico-periodica-list"></div>
+                    <button class="btn-limpar" onclick="limparHistorico('periodica')">Limpar histórico</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Key-Baumer v1.0</p>
+        </div>
+    </div>
+
+    <script>
+        // Históricos
+        let historicoTriaxx = JSON.parse(localStorage.getItem('keyBaumer_triaxx') || '[]');
+        let historicoPeriodica = JSON.parse(localStorage.getItem('keyBaumer_periodica') || '[]');
+
+        renderHistorico('triaxx');
+        renderHistorico('periodica');
+
+        // === TABS ===
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+
+            if (tab === 'triaxx') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('tab-triaxx').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('tab-periodica').classList.add('active');
+            }
+        }
+
+        // === TRIAXX ===
+        function calcularTriaxx() {
+            const input = document.getElementById('hex-input').value.trim().toUpperCase();
+            const errorEl = document.getElementById('error-triaxx');
+            const resultEl = document.getElementById('resultado-triaxx');
+            const senhaEl = document.getElementById('senha-triaxx');
+            const infoEl = document.getElementById('info-triaxx');
+
+            errorEl.classList.remove('show');
+            resultEl.classList.remove('visible');
+
+            // Validar
+            const parts = input.split('-');
+            if (parts.length !== 10) {
+                showError('error-triaxx', 'Formato inválido. Use 10 bytes separados por hífen.');
+                return;
+            }
+
+            const bytes = [];
+            for (let i = 0; i < 10; i++) {
+                const val = parseInt(parts[i], 16);
+                if (isNaN(val) || parts[i].length !== 2) {
+                    showError('error-triaxx', 'Byte inválido na posição ' + i + ': "' + parts[i] + '"');
+                    return;
+                }
+                bytes.push(val);
+            }
+
+            const [b0, b1, b2, b3, b4, b5, b6, b7, b8, b9] = bytes;
+
+            // Algoritmo
+            const K1 = b5 ^ b8 ^ 0x23;
+            const K3 = b6 ^ b7 ^ b9 ^ 0x18;
+            const baixo = b1 ^ K1;
+            const alto = b3 ^ K3;
+            const senha = baixo + 256 * alto;
+
+            // Mostrar
+            senhaEl.textContent = senha;
+            infoEl.textContent = `K1=${K1.toString(16).toUpperCase()}h  K3=${K3.toString(16).toUpperCase()}h  →  ${baixo} + 256×${alto}`;
+            resultEl.classList.add('visible');
+
+            // Histórico
+            historicoTriaxx.unshift({ code: input, pwd: senha });
+            if (historicoTriaxx.length > 10) historicoTriaxx.pop();
+            localStorage.setItem('keyBaumer_triaxx', JSON.stringify(historicoTriaxx));
+            renderHistorico('triaxx');
+        }
+
+        // === PERIÓDICA ===
+        function calcularPeriodica() {
+            const input = document.getElementById('ns-input').value.trim();
+            const errorEl = document.getElementById('error-periodica');
+            const resultEl = document.getElementById('resultado-periodica');
+            const senhaEl = document.getElementById('senha-periodica');
+            const infoEl = document.getElementById('info-periodica');
+
+            errorEl.classList.remove('show');
+            resultEl.classList.remove('visible');
+
+            if (input.length !== 5 || isNaN(input)) {
+                showError('error-periodica', 'Digite exatamente 5 dígitos numéricos.');
+                return;
+            }
+
+            const ns = parseInt(input);
+            const base = Math.floor(ns / 10);
+            const senha = base + 59;
+
+            senhaEl.textContent = senha;
+            infoEl.textContent = `${ns} ÷ 10 = ${base} → ${base} + 59 = ${senha}`;
+            resultEl.classList.add('visible');
+
+            // Histórico
+            historicoPeriodica.unshift({ ns: input, pwd: senha });
+            if (historicoPeriodica.length > 10) historicoPeriodica.pop();
+            localStorage.setItem('keyBaumer_periodica', JSON.stringify(historicoPeriodica));
+            renderHistorico('periodica');
+        }
+
+        // === UTILITÁRIOS ===
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show');
+        }
+
+        function renderHistorico(tipo) {
+            if (tipo === 'triaxx') {
+                const section = document.getElementById('historico-triaxx-section');
+                const list = document.getElementById('historico-triaxx-list');
+                if (historicoTriaxx.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+                section.style.display = 'block';
+                list.innerHTML = historicoTriaxx.map(item =>
+                    `<div class="historico-item">
+                        <span class="historico-code">${item.code}</span>
+                        <span class="historico-senha">${item.pwd}</span>
+                    </div>`
+                ).join('');
+            } else {
+                const section = document.getElementById('historico-periodica-section');
+                const list = document.getElementById('historico-periodica-list');
+                if (historicoPeriodica.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+                section.style.display = 'block';
+                list.innerHTML = historicoPeriodica.map(item =>
+                    `<div class="historico-item">
+                        <span class="historico-code">NS ${item.ns}</span>
+                        <span class="historico-senha">${item.pwd}</span>
+                    </div>`
+                ).join('');
+            }
+        }
+
+        function limparHistorico(tipo) {
+            if (tipo === 'triaxx') {
+                historicoTriaxx = [];
+                localStorage.removeItem('keyBaumer_triaxx');
+                document.getElementById('historico-triaxx-section').style.display = 'none';
+            } else {
+                historicoPeriodica = [];
+                localStorage.removeItem('keyBaumer_periodica');
+                document.getElementById('historico-periodica-section').style.display = 'none';
+            }
+        }
+
+        // Enter para calcular
+        document.getElementById('hex-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calcularTriaxx();
+        });
+
+        document.getElementById('ns-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calcularPeriodica();
+        });
+
+        // Permitir apenas números no campo NS
+        document.getElementById('ns-input').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    </script>
+</body>
+</html>
